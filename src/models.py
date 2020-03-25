@@ -16,18 +16,14 @@ class SomeModel(db.Model):
         return model
 
 
-# Model City -> Country(String), State(String), City(String),
-# totalCases(Int), suspects(Int), refuses(Int), deaths(Int), recovered(Int)
+# Model City -> Country(String), State(String), City(String), totalCases(Int)
 class City(db.Model):
-    __tablename__ = 'CITY'
-    city = db.Column(db.String(255), primary_key=True)
-    state = db.Column(db.String(255), nullable=False)
-    country = db.Column(db.String(255), nullable=False)
+    __tablename__ = 'city'
+    id = db.Column(db.Integer, primary_key=True)
+    country = db.Column(db.String)
+    state = db.Column(db.String)
+    city = db.Column(db.String)
     total_cases = db.Column(db.Integer)
-    suspects = db.Column(db.Integer)
-    refuses = db.Column(db.Integer)
-    deaths = db.Column(db.Integer)
-    recovered = db.Column(db.Integer)
 
     def save(self, session, **kwargs):
         model = City(**kwargs
@@ -35,10 +31,8 @@ class City(db.Model):
         session.add(model)
         return model
 
-    @property
-    def active_cases(self):
-        return (self.total_cases - self.suspects -
-                self.refuses - self.deaths - self.recovered)
+    def __repr__(self):
+        return f'<City {self.city}>'
 
 
 # Model State -> Country(String), State(String),
