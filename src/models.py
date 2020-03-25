@@ -45,14 +45,15 @@ class City(db.Model):
 # totalCases(Int), totalCasesMS(Int),
 # notConfirmedByMS(Int), Deaths(Int), URL(String)
 class State(db.Model):
-    __tablename__ = 'STATE'
-    state = db.Column(db.String(255), primary_key=True)
-    country = db.Column(db.String(255), nullable=False)
-    total_cases = db.Column(db.Integer)
-    total_cases_ms = db.Column(db.Integer)
-    not_confirmed_by_ms = db.Column(db.Integer)
+    __tablename__ = 'state'
+    id = db.Column(db.Integer, primary_key=True)
+    state = db.Column(db.String)
+    country = db.Column(db.String)
+    totalcases = db.Column(db.Integer)
+    totalcasesms = db.Column(db.Integer)
+    notconfirmedbyms = db.Column(db.Integer)
     deaths = db.Column(db.Integer)
-    url = db.Column(db.String(255), nullable=False)
+    url = db.Column(db.String)
 
     def save(self, session, **kwargs):
         model = State(**kwargs
@@ -64,13 +65,13 @@ class State(db.Model):
 # Model StatesPerDay -> Date(Date), Country(String),
 # State(String), newCases(Int), totalCases(Int)
 class StatesPerDay(db.Model):
-    __tablename__ = 'STATES_PER_DAY'
+    __tablename__ = 'statesperday'
     id = db.Column(db.String(255), primary_key=True)
-    date = db.Column(db.DateTime, nullable=False)
-    country = db.Column(db.String(255), primary_key=True)
-    state = db.Column(db.String(255), nullable=False)
-    new_cases = db.Column(db.Integer)
-    total_cases = db.Column(db.Integer)
+    date = db.Column(db.Date)
+    country = db.Column(db.String(255))
+    state = db.Column(db.String(255))
+    newcases = db.Column(db.Integer)
+    totalcases = db.Column(db.Integer)
 
     def save(self, session, **kwargs):
         model = StatesPerDay(**kwargs
