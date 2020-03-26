@@ -37,24 +37,18 @@ class TestDataApi(TestCase):
         )
         data = json.loads(resp.get_data(as_text=True))
         self.assertEqual(data, {
-            'activeCases': 0,
-            'deaths': 0,
-            'recoveredCases': 0,
-            'suspectedCases': 0
+            'totalCases': 0,
         })
 
     def test_return_cases_by_state_with_reports(self):
         # Generate test data
         City().save(self.db.session, city='Igarapava', state='SP',
-                    country='Brasil', total_cases=45, suspects=35,
-                    refuses=3, deaths=2, recovered=1)
+                    country='Brasil', total_cases=45)
         City().save(self.db.session, city='Franca', state='SP',
-                    country='Brasil', total_cases=50, suspects=35,
-                    refuses=3, deaths=1, recovered=1)
+                    country='Brasil', total_cases=50)
         # Should not include this data
         City().save(self.db.session, city='Uberaba', state='MG',
-                    country='Brasil', total_cases=50, suspects=35,
-                    refuses=3, deaths=1, recovered=1)
+                    country='Brasil', total_cases=50)
         self.db.session.commit()
         resp = self.client.get(
             '/data_api/v1/data/state/SP',
@@ -65,22 +59,17 @@ class TestDataApi(TestCase):
         data = json.loads(resp.get_data(as_text=True))
 
         self.assertEqual(data, {
-            'activeCases': 14,
-            'deaths': 3,
-            'recoveredCases': 2,
-            'suspectedCases': 70
+            'totalCases': 95
         })
 
     def test_return_all_cases(self):
         # Seed test data
         City().save(
             self.db.session, city="c1", state="s1",
-            country="c1", total_cases=20, suspects=5,
-            refuses=3, deaths=2, recovered=1)
+            country="c1", total_cases=20)
         City().save(
             self.db.session, city="c2", state="s2",
-            country="c1", total_cases=20, suspects=5,
-            refuses=3, deaths=2, recovered=1)
+            country="c1", total_cases=20)
         self.db.session.commit()
 
         resp = self.client.get(
@@ -92,22 +81,17 @@ class TestDataApi(TestCase):
         data = json.loads(resp.get_data(as_text=True))
 
         self.assertEqual(data, {
-            'activeCases': 18,
-            'deaths': 4,
-            'recoveredCases': 2,
-            'suspectedCases': 10
+            'totalCases': 40
         })
 
     def test_return_cases_by_search_city(self):
         # Seed test data
         City().save(
             self.db.session, city="c1", state="s1",
-            country="c1", total_cases=20, suspects=5,
-            refuses=3, deaths=2, recovered=1)
+            country="c1", total_cases=20)
         City().save(
             self.db.session, city="c2", state="s2",
-            country="c1", total_cases=20, suspects=5,
-            refuses=3, deaths=2, recovered=1)
+            country="c1", total_cases=20)
         self.db.session.commit()
 
         resp = self.client.get(
@@ -121,24 +105,17 @@ class TestDataApi(TestCase):
         self.assertEqual(data, [{
             'city': 'c1',
             'state': 's1',
-            'cases': {
-                'activeCases': 9,
-                'suspectedCases': 5,
-                'recoveredCases': 1,
-                'deaths': 2
-            }
+            'cases': 20
         }])
 
     def test_return_cases_by_search_state(self):
         # Seed test data
         City().save(
             self.db.session, city="c1", state="s1",
-            country="c1", total_cases=20, suspects=5,
-            refuses=3, deaths=2, recovered=1)
+            country="c1", total_cases=20)
         City().save(
             self.db.session, city="c2", state="s2",
-            country="c1", total_cases=20, suspects=5,
-            refuses=3, deaths=2, recovered=1)
+            country="c1", total_cases=20)
 
         self.db.session.commit()
 
@@ -153,25 +130,17 @@ class TestDataApi(TestCase):
         self.assertEqual(data, [{
             'city': 'c2',
             'state': 's2',
-            'cases': {
-                'activeCases': 9,
-                'suspectedCases': 5,
-                'recoveredCases': 1,
-                'deaths': 2
-            }
+            'cases': 20
         }])
 
     def test_return_cases_by_search_multiple_cities(self):
         # Seed test data
         City().save(self.db.session, city="c1", state="s1",
-                    country="c1", total_cases=20, suspects=5,
-                    refuses=3, deaths=2, recovered=1)
+                    country="c1", total_cases=20)
         City().save(self.db.session, city="c2", state="s2",
-                    country="c1", total_cases=20, suspects=5,
-                    refuses=3, deaths=2, recovered=1)
+                    country="c1", total_cases=20)
         City().save(self.db.session, city="c3", state="s2",
-                    country="c1", total_cases=20, suspects=5,
-                    refuses=3, deaths=2, recovered=1)
+                    country="c1", total_cases=20)
         self.db.session.commit()
 
         resp = self.client.get(
@@ -186,22 +155,12 @@ class TestDataApi(TestCase):
             {
                 'city': 'c2',
                 'state': 's2',
-                'cases': {
-                    'activeCases': 9,
-                    'suspectedCases': 5,
-                    'recoveredCases': 1,
-                    'deaths': 2
-                }
+                'cases': 20
             },
             {
                 'city': 'c3',
                 'state': 's2',
-                'cases': {
-                    'activeCases': 9,
-                    'suspectedCases': 5,
-                    'recoveredCases': 1,
-                    'deaths': 2
-                }
+                'cases': 20
             }
         ])
 
