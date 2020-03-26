@@ -16,12 +16,7 @@ class ReportService:
             current_case = {
                 'city': case.city,
                 'state': case.state,
-                'cases': {
-                    'activeCases': case.active_cases,
-                    'suspectedCases': case.suspects,
-                    'recoveredCases': case.recovered,
-                    'deaths': case.deaths
-                }
+                'cases': case.total_cases
             }
             result.append(current_case)
 
@@ -43,20 +38,12 @@ class ReportService:
 
 
 def compile_cases(data):
-    active_cases = sum(
-        [city.active_cases
+    total_cases = sum(
+        [city.total_cases
          for city in data]) or 0
-    suspected_cases = sum(
-        [city.suspects for city in data]) or 0
-    recovered_cases = sum(
-        [city.recovered for city in data]) or 0
-    deaths = sum([city.deaths for city in data]) or 0
 
     return {
-        'activeCases': active_cases,
-        'suspectedCases': suspected_cases,
-        'recoveredCases': recovered_cases,
-        'deaths': deaths
+        'totalCases': total_cases
     }
 
 
