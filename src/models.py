@@ -16,7 +16,6 @@ class SomeModel(db.Model):
         return model
 
 
-# Model City -> Country(String), State(String), City(String), totalCases(Int)
 class City(db.Model):
     __tablename__ = 'city'
     id = db.Column(db.Integer, primary_key=True)
@@ -26,8 +25,7 @@ class City(db.Model):
     total_cases = db.Column(db.Integer)
 
     def save(self, session, **kwargs):
-        model = City(**kwargs
-                     )
+        model = City(**kwargs)
         session.add(model)
         return model
 
