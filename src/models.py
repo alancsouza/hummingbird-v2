@@ -1,63 +1,67 @@
-
 from app import db
-
-
-class SomeModel(db.Model):
-    __tablename__ = 'some_model'
-    id = db.Column(db.String(255), primary_key=True)
-    name = db.Column(db.Integer, nullable=False)
-
-    def save(self, session, **kwargs):
-        model = SomeModel(
-            id=kwargs['id'],
-            name=kwargs['name']
-        )
-        session.add(model)
-        return model
+from sqlalchemy.orm import relationship
 
 
 class City(db.Model):
     __tablename__ = 'city'
-    id = db.Column(db.Integer, primary_key=True)
-    country = db.Column(db.String)
-    state = db.Column(db.String)
-    city = db.Column(db.String)
+    city = db.Column(db.String(255), primary_key=True)
+    state = db.Column(db.String(255), nullable=False)
+    country = db.Column(db.String(255), nullable=False)
     total_cases = db.Column(db.Integer)
+    suspects = db.Column(db.Integer)
+    refuses = db.Column(db.Integer)
+    deaths = db.Column(db.Integer)
+    recovered = db.Column(db.Integer)
 
     def save(self, session, **kwargs):
-        model = City(**kwargs)
+        model = City(**kwargs
+                     )
         session.add(model)
         return model
 
-    def __repr__(self):
-        return f'<City {self.city}>'
+    @property
+    def active_cases(self):
+        return (self.total_cases - self.suspects -
+                self.refuses - self.deaths - self.recovered)
 
 
-# Model State -> Country(String), State(String),
-# totalCases(Int), totalCasesMS(Int),
-# notConfirmedByMS(Int), Deaths(Int), URL(String)
 class State(db.Model):
     __tablename__ = 'state'
     id = db.Column(db.Integer, primary_key=True)
-    state = db.Column(db.String)
+    name = db.Column(db.String)
+    abbreviation = db.Column(db.String)
+    lat = db.Column(db.Float)
+    long = db.Column(db.Float)
+
+    def save(self, session, **kwargs):
+        model = State(**kwargs)
+        session.add(model)
+        return model
+
+
+class StateCases(db.Model):
+    __tablename__ = 'casesperstate'
+    id = db.Column(db.Integer, primary_key=True)
     country = db.Column(db.String)
+    state_id = db.Column(db.Integer, db.ForeignKey('state.id'))
     totalcases = db.Column(db.Integer)
     totalcasesms = db.Column(db.Integer)
     notconfirmedbyms = db.Column(db.Integer)
     deaths = db.Column(db.Integer)
     url = db.Column(db.String)
+    state_data = relationship("State")
 
     def save(self, session, **kwargs):
-        model = State(**kwargs
-                      )
+        model = StateCases(**kwargs)
         session.add(model)
         return model
 
+    def fetch_all(self, session):
+        return session.query(self.__class__).all()
 
-# Model StatesPerDay -> Date(Date), Country(String),
-# State(String), newCases(Int), totalCases(Int)
+
 class StatesPerDay(db.Model):
-    __tablename__ = 'statesperday'
+    __tablename__ = 'states_per_day'
     id = db.Column(db.String(255), primary_key=True)
     date = db.Column(db.Date)
     country = db.Column(db.String(255))
@@ -66,8 +70,7 @@ class StatesPerDay(db.Model):
     totalcases = db.Column(db.Integer)
 
     def save(self, session, **kwargs):
-        model = StatesPerDay(**kwargs
-                             )
+        model = StatesPerDay(**kwargs)
         session.add(model)
         return model
 
@@ -101,7 +104,6 @@ class TestPoint(db.Model):
         }
 
 
-# Model City -> Longitude(Float), Latitude(Float), Status(String)
 class CasesLocation(db.Model):
     __tablename__ = 'CASES_LOCATION'
     id = db.Column(db.String(255), primary_key=True)
