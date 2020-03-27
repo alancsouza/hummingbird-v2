@@ -43,12 +43,12 @@ class TestDataApi(TestCase):
     def test_return_cases_by_state_with_reports(self):
         # Generate test data
         City().save(self.db.session, city='Igarapava', state='SP',
-                    country='Brasil', total_cases=45)
+                    country='Brasil', totalcases=45)
         City().save(self.db.session, city='Franca', state='SP',
-                    country='Brasil', total_cases=50)
+                    country='Brasil', totalcases=50)
         # Should not include this data
         City().save(self.db.session, city='Uberaba', state='MG',
-                    country='Brasil', total_cases=50)
+                    country='Brasil', totalcases=50)
         self.db.session.commit()
         resp = self.client.get(
             '/data_api/v1/data/state/SP',
@@ -66,10 +66,10 @@ class TestDataApi(TestCase):
         # Seed test data
         City().save(
             self.db.session, city="c1", state="s1",
-            country="c1", total_cases=20)
+            country="c1", totalcases=20)
         City().save(
             self.db.session, city="c2", state="s2",
-            country="c1", total_cases=20)
+            country="c1", totalcases=20)
         self.db.session.commit()
 
         resp = self.client.get(
@@ -88,10 +88,10 @@ class TestDataApi(TestCase):
         # Seed test data
         City().save(
             self.db.session, city="c1", state="s1",
-            country="c1", total_cases=20)
+            country="c1", totalcases=20)
         City().save(
             self.db.session, city="c2", state="s2",
-            country="c1", total_cases=20)
+            country="c1", totalcases=20)
         self.db.session.commit()
 
         resp = self.client.get(
@@ -112,10 +112,10 @@ class TestDataApi(TestCase):
         # Seed test data
         City().save(
             self.db.session, city="c1", state="s1",
-            country="c1", total_cases=20)
+            country="c1", totalcases=20)
         City().save(
             self.db.session, city="c2", state="s2",
-            country="c1", total_cases=20)
+            country="c1", totalcases=20)
 
         self.db.session.commit()
 
@@ -136,11 +136,11 @@ class TestDataApi(TestCase):
     def test_return_cases_by_search_multiple_cities(self):
         # Seed test data
         City().save(self.db.session, city="c1", state="s1",
-                    country="c1", total_cases=20)
+                    country="c1", totalcases=20)
         City().save(self.db.session, city="c2", state="s2",
-                    country="c1", total_cases=20)
+                    country="c1", totalcases=20)
         City().save(self.db.session, city="c3", state="s2",
-                    country="c1", total_cases=20)
+                    country="c1", totalcases=20)
         self.db.session.commit()
 
         resp = self.client.get(
@@ -188,6 +188,3 @@ class TestDataApi(TestCase):
         )
         data = json.loads(resp.get_data(as_text=True))
         self.assertEqual(data['status'], 'ACTIVE')
-
-
-

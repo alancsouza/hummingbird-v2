@@ -8,7 +8,7 @@ class City(db.Model):
     country = db.Column(db.String)
     state = db.Column(db.String)
     city = db.Column(db.String)
-    total_cases = db.Column(db.Integer)
+    totalcases = db.Column(db.Integer)
 
     def save(self, session, **kwargs):
         model = City(**kwargs)

@@ -16,7 +16,7 @@ class ReportService:
             current_case = {
                 'city': case.city,
                 'state': case.state,
-                'cases': case.total_cases
+                'cases': case.totalcases
             }
             result.append(current_case)
 
@@ -38,12 +38,12 @@ class ReportService:
 
 
 def compile_cases(data):
-    total_cases = sum(
-        [city.total_cases
+    totalcases = sum(
+        [city.totalcases
          for city in data]) or 0
 
     return {
-        'totalCases': total_cases
+        'totalCases': totalcases
     }
 
 
